@@ -11,18 +11,19 @@ volumes="t1 t2"
 # make output directory
 [ ! -d ./output ] && mkdir -p output
 
-# computing brainmask and crop if true
+# crop t2 if true. else copy
+if [[ ${crop} == 'true' ]]; then
+	robustfov -i ${t2} -r t2.nii.gz
+else
+	cp ${t2} ./t2.nii.gz
+fi
+
+# copy t1
+cp ${t1} ./t1.nii.gz
+
+# computing brainmask
 for i in ${volumes}
 do
-	vol=$(eval "echo \$${i}")
-
-	# crop if true. else copy
-	if [[ ${crop} == 'true' ]]; then
-		robustfov -i ${vol} -r ${i}.nii.gz
-	else
-		cp ${vol} ./${i}.nii.gz
-	fi
-
 	# create brainmask
 	bet ${i}.nii.gz ${i}_brain -R -m
 done
