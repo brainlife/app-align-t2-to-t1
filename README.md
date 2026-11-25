@@ -3,6 +3,33 @@
 
 # Align T2 to T1 using FSL Flirt
 
+<!-- brainlife-app:begin (generated from the App manifest; edit the manifest, not this block) -->
+
+**Aligns a T2-weighted image to an ACPC-aligned T1-weighted image with FSL flirt (brain-extracted registration), producing a T2w image in T1w space.**
+
+Optionally crops the T2w image with robustfov, brain-extracts both images with bet, estimates a flirt transform from the T2w brain to the T1w brain with the chosen degrees of freedom and cost function, and applies it to the whole T2w image on the T1w grid. Use it so T2w data can be used alongside the T1w image (for example in FreeSurfer or myelin mapping).
+
+Run it on brainlife.io: [https://doi.org/10.25663/brainlife.app.510](https://doi.org/10.25663/brainlife.app.510)
+
+| Input | Datatype | Required | Description |
+|---|---|---|---|
+| `t1` | `neuro/anat/t1w` (acpc_aligned) | yes | reference t1 to align t2 data to |
+| `t2` | `neuro/anat/t2w` | yes | t2 data to align |
+
+| Output | Datatype | Description |
+|---|---|---|
+| `output` | `neuro/anat/t2w` | T2-weighted image resampled into the ACPC-aligned T1w space. |
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `crop` | boolean | `false` | If true, will crop using fsl robustfov. if false, will not. default == false |
+| `cost` | enum | `mutualinfo` | Cost function used by flirt to estimate the T2-to-T1 transform (mutual information by default). Options: `mutualinfo`, `corratio`, `normcorr`, `normmi`, `leastsq`, `labeldiff`, `bbr`. |
+| `dof` | number | `12` | Degrees of freedom of the flirt transform (for example 6 rigid, 12 affine). |
+
+Runtime: container `brainlife/fsl:5.0.11`; 1 CPUs; 12 GB memory; 0.75 h walltime.
+
+<!-- brainlife-app:end -->
+
 This app will This app will align anatomical t2w data to an anatomical t1w image using FSL's flirt command. This is done to ensure that t2w data is in same space as anatomical t1w image, which is used for most analyses.
 
 ### Authors
